@@ -1,7 +1,6 @@
 console.log('Lets write JavaScript');
 
 async function getSongs() {
-    // Go up one level from /songs/ to access /gaana/
     let a = await fetch("../gaana/");
     let response = await a.text();
 
@@ -25,26 +24,24 @@ async function main() {
     let songs = await getSongs();
     console.log("Loaded songs:", songs);
 
-    let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
+    let songUL = document.querySelector(".songList ul");
     songUL.innerHTML = "";
 
     for (const song of songs) {
-        songUL.innerHTML += `<li>${song.replaceAll("%20", " ")}</li>`;
+        songUL.innerHTML += `<li class="song-item" data-song="${song}">${song.replaceAll("%20", " ")}</li>`;
     }
 
-    // Use relative path from /songs/ to /gaana/
-    let audio = new Audio(`../gaana/${songs[0]}`);
-    audio.play().catch(err => {
-        console.error("Playback failed:", err);
-    });
+    // ✅ Wait for user click to start playback
+    document.body.addEventListener("click", () => {
+        let audio = new Audio(`../gaana/${songs[0]}`);
+        audio.play().catch(err => {
+            console.error("Playback failed:", err);
+        });
 
-    audio.onerror = () => {
-        console.error("Audio file could not be loaded:", audio.src);
-    };
-
-    audio.addEventListener("loadeddata", () => {
-        console.log("Duration:", audio.duration);
-    });
+        audio.addEventListener("loadeddata", () => {
+            console.log("Duration:", audio.duration);
+        });
+    }, { once: true }); // Only trigger once
 }
 
 main();
