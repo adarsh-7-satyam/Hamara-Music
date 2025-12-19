@@ -56,6 +56,33 @@ verifyOtpBtn.onclick = async () => {
 
 
 console.log('Lets write JavaScript');
+function updateTopBar() {
+  const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+  const name = sessionStorage.getItem("userName");
+
+  const welcomeText = document.getElementById("welcomeText");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const loginBtn = document.querySelector(".loginbtn");
+  const signupBtn = document.querySelector(".signupbtn");
+
+  if (isLoggedIn && name) {
+    welcomeText.innerText = `Welcome ${name}`;
+    welcomeText.style.display = "inline";
+
+    logoutBtn.style.display = "inline-block";
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+  } else {
+    welcomeText.style.display = "none";
+    logoutBtn.style.display = "none";
+
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+  }
+}
+
+
+
 let currentSong = new Audio();
 let songs = [];
 let currFolder = "";
@@ -166,6 +193,9 @@ async function displayAlbums() {
     });
 }
 
+
+
+
  // ===== AUTH LOGIC START =====
 
 
@@ -256,7 +286,13 @@ loginSubmit.onclick = async () => {
     const data = await res.json();
     alert(data.message);
 
-    if (res.ok) loginOverlay.style.display = "none";
+    if (res.ok) {
+  sessionStorage.setItem("isLoggedIn", "true");
+  sessionStorage.setItem("userName", data.name);
+
+  loginOverlay.style.display = "none";
+  updateTopBar();
+}
 };
 }
 
@@ -415,7 +451,25 @@ if (searchButton && searchText && searchContainer && searchInputField) {
 
 
 
+
+
 main();
+
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.onclick = () => {
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("userName");
+    updateTopBar();
+    alert("Logged out successfully");
+  };
+}
+
+
+
+updateTopBar();
+
+
 
 });
 

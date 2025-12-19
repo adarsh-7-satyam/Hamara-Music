@@ -12,7 +12,7 @@ const router = express.Router();
  */
 router.post("/signup", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
 
     let user = await User.findOne({ email });
 
@@ -46,6 +46,7 @@ const otp = Math.floor(100000 + Math.random() * 900000).toString();
 user = new User({
   email,
   password: hashedPassword,
+  name,
   otp,
   otpExpiry: Date.now() + 10 * 60 * 1000,
   verified: false
@@ -112,7 +113,8 @@ router.post("/verify-otp", async (req, res) => {
  */
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+   const { email, password } = req.body;
+
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -130,7 +132,10 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    res.json({ message: "Login successful" });
+   res.json({
+  message: "Login successful",
+  name: user.name || user.email.split("@")[0]
+});
 
   } catch (err) {
     console.error(err);

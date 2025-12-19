@@ -63,9 +63,17 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <button class="signupbtn">Sign up</button>
-                    <button class="loginbtn">Log in</button>
-                </div>
+    <!-- Welcome text (hidden by default) -->
+    <span id="welcomeText" class="welcome-text" style="display:none;"></span>
+
+    <!-- Logout button (hidden by default) -->
+    <button id="logoutBtn" class="logout-btn" style="display:none;">Log out</button>
+
+    <!-- Existing buttons -->
+    <button class="signupbtn">Sign up</button>
+    <button class="loginbtn">Log in</button>
+</div>
+
             </div>
 
             <div class="spotifyPlaylists">
@@ -127,7 +135,8 @@
   <div class="signup-box">
 <h2>Sign up for Hamara Music</h2>
 
-    <input type="text" placeholder="Full Name">
+    <input type="text" id="signupName" placeholder="Full Name">
+
     <input type="email" id="signupEmail" placeholder="Email Address">
 <input type="password" id="signupPassword" placeholder="Password">
     <input type="date" placeholder="Date of Birth">
