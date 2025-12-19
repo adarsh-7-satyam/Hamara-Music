@@ -109,6 +109,119 @@ async function displayAlbums() {
     });
 }
 
+ // ===== AUTH LOGIC START =====
+
+const loginOverlay = document.querySelector(".login-overlay");
+const signupOverlay = document.querySelector(".signup-overlay");
+
+const loginBtn = document.querySelector(".loginbtn");
+const signupBtn = document.querySelector(".signupbtn");
+
+const closeLogin = document.querySelector(".close-login");
+const closeSignup = document.querySelector(".close-signup");
+
+const loginSubmit = document.querySelector(".login-submit");
+const signupSubmit = document.querySelector(".signup-submit");
+
+// open popups
+if (loginBtn && signupBtn) {
+    loginBtn.onclick = () => loginOverlay.style.display = "flex";
+    signupBtn.onclick = () => signupOverlay.style.display = "flex";
+}
+
+
+// close popups
+if (closeLogin && closeSignup) {
+    closeLogin.onclick = () => loginOverlay.style.display = "none";
+    closeSignup.onclick = () => signupOverlay.style.display = "none";
+}
+;
+
+// SIGNUP → BACKEND
+if (signupSubmit) {
+signupSubmit.onclick = async () => {
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+
+    if (!email || !password) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+
+    if (res.ok) signupOverlay.style.display = "none";
+};
+}
+
+// LOGIN → BACKEND
+if (loginSubmit) {
+
+loginSubmit.onclick = async () => {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (res.ok) loginOverlay.style.display = "none";
+};
+}
+
+// FORGOT PASSWORD FLOW
+document.getElementById("forgotPassword").onclick = async () => {
+    const email = prompt("Enter registered email:");
+    if (!email) return;
+
+    let res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+    });
+
+    let data = await res.json();
+    alert(data.message);
+
+    if (!res.ok) return;
+
+    const otp = prompt("Enter OTP sent to email:");
+    const newPassword = prompt("Enter new password:");
+
+    if (!otp || !newPassword) {
+        alert("All fields required");
+        return;
+    }
+
+    res = await fetch("http://localhost:5000/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp, newPassword })
+    });
+
+    data = await res.json();
+    alert(data.message);
+};
+
+// ===== AUTH LOGIC END =====
 async function main() {
     await getSongs("songs/ncs");
     playMusic(songs[0], true);
@@ -116,14 +229,15 @@ async function main() {
 
     // Play / Pause button
     document.querySelector("#play").onclick = () => {
-        if (currentSong.paused) {
-            currentSong.play();
-            play.src = "img/pause.svg";
-        } else {
-            currentSong.pause();
-            play.src = "img/play.svg";
-        }
-    };
+    if (currentSong.paused) {
+        currentSong.play();
+        document.querySelector("#play").src = "img/pause.svg";
+    } else {
+        currentSong.pause();
+        document.querySelector("#play").src = "img/play.svg";
+    }
+};
+
 
     // Update progress / time
     currentSong.ontimeupdate = () => {
@@ -165,44 +279,8 @@ async function main() {
         document.querySelector(".left").style.left = "-120%";
     };
 
-    // === LOGIN POPUP ADDED HERE ===
-    const loginOverlay = document.querySelector(".login-overlay");
-    const loginBtn = document.querySelector(".loginbtn");
-    const closeLogin = document.querySelector(".close-login");
-    const loginSubmit = document.querySelector(".login-submit");
+  
 
-    loginBtn.addEventListener("click", () => {
-        loginOverlay.classList.add("show-modal");
-    });
-
-    closeLogin.addEventListener("click", () => {
-        loginOverlay.classList.remove("show-modal");
-    });
-
-    loginSubmit.addEventListener("click", () => {
-        alert("Logged in successfully (demo)!");
-        loginOverlay.classList.remove("show-modal");
-    });
-
-
-    // === SIGNUP POPUP ADDED HERE ===
-const signupOverlay = document.querySelector(".signup-overlay");
-const signupBtn = document.querySelector(".signupbtn");
-const closeSignup = document.querySelector(".close-signup");
-const signupSubmit = document.querySelector(".signup-submit");
-
-signupBtn.addEventListener("click", () => {
-    signupOverlay.classList.add("show-modal");
-});
-
-closeSignup.addEventListener("click", () => {
-    signupOverlay.classList.remove("show-modal");
-});
-
-signupSubmit.addEventListener("click", () => {
-    alert("Account created successfully (demo)!");
-    signupOverlay.classList.remove("show-modal");
-});
 
 // ✅ SEARCH FUNCTIONALITY FOR PLAYLISTS
 const searchInput = document.getElementById("playlistSearch");

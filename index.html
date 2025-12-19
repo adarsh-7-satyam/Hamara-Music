@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/utility.css">
-    <title>Spotify - Web Player: Music for everyone</title>
+    <title>Hamara Music - Web Player</title>
+
 </head>
 
 <body>
@@ -102,23 +103,32 @@
     <!-- ✅ ADD LOGIN POPUP HERE -->
 <div class="login-overlay" style="display:none;">
   <div class="login-box">
-      <h2>Log in to Spotify</h2>
-      <input type="text" placeholder="Email or Username">
-      <input type="password" placeholder="Password">
+      <h2>Log in to Hamara Music</h2>
+
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+
       <button class="login-submit">Log In</button>
+
+      <p id="forgotPassword" style="cursor:pointer; color:#1db954;">
+        Forgot password?
+      </p>
+
       <p class="close-login" style="cursor:pointer; margin-top:10px;">Cancel</p>
   </div>
 </div>
+
 <!-- ✅ END LOGIN POPUP -->
 
 
 <!-- ✅ SIGNUP POPUP -->
 <div class="signup-overlay" style="display:none;">
   <div class="signup-box">
-    <h2>Sign up for Spotify</h2>
+<h2>Sign up for Hamara Music</h2>
+
     <input type="text" placeholder="Full Name">
-    <input type="email" placeholder="Email Address">
-    <input type="password" placeholder="Password">
+    <input type="email" id="signupEmail" placeholder="Email Address">
+<input type="password" id="signupPassword" placeholder="Password">
     <input type="date" placeholder="Date of Birth">
     <select>
         <option value="" disabled selected>Gender</option>
