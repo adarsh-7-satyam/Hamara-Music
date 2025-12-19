@@ -108,7 +108,8 @@
       <input type="email" id="loginEmail" placeholder="Email">
       <input type="password" id="loginPassword" placeholder="Password">
 
-      <button class="login-submit">Log In</button>
+      <button type="button" class="login-submit">Log In</button>
+
 
       <p id="forgotPassword" style="cursor:pointer; color:#1db954;">
         Forgot password?
@@ -136,11 +137,28 @@
         <option>Female</option>
         <option>Other</option>
     </select>
-    <button class="signup-submit">Sign Up</button>
+    <button type="button" class="signup-submit">Sign Up</button>
     <p class="close-signup" style="cursor:pointer; margin-top:10px;">Cancel</p>
   </div>
 </div>
 <!-- ✅ END SIGNUP POPUP -->
+
+<div class="otp-overlay" style="display:none;">
+  <div class="otp-box">
+    <h2>Verify Email</h2>
+
+    <input
+      type="text"
+      id="otpInput"
+      placeholder="Enter OTP"
+      autocomplete="one-time-code"
+    />
+
+    <button id="verifyOtpBtn">Verify OTP</button>
+  </div>
+</div>
+
+
 
 
     <script src="js/script.js"></script>

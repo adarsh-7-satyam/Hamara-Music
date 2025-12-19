@@ -1,3 +1,60 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const otpOverlay = document.querySelector(".otp-overlay");
+    const loginOverlay = document.querySelector(".login-overlay");
+  const signupOverlay = document.querySelector(".signup-overlay");
+
+   const pendingEmail = sessionStorage.getItem("pendingEmail");
+if (pendingEmail && otpOverlay) {
+  otpOverlay.style.display = "flex";
+} else if (otpOverlay) {
+  otpOverlay.style.display = "none";
+}
+
+
+
+
+    
+
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+
+if (verifyOtpBtn) {
+
+    
+
+verifyOtpBtn.onclick = async () => {
+  const otp = document.getElementById("otpInput").value;
+  const email = sessionStorage.getItem("pendingEmail");
+
+  if (!otp) {
+  alert("Enter OTP");
+  return;
+}
+
+  if (!email) {
+    alert("Signup session expired. Please signup again.");
+    return;
+  }
+
+  const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+
+  if (res.ok) {
+  sessionStorage.removeItem("pendingEmail");
+  otpOverlay.style.display = "none";
+  alert("Email verified! Please log in.");
+  loginOverlay.style.display = "flex";
+}
+
+};
+}
+
+
 console.log('Lets write JavaScript');
 let currentSong = new Audio();
 let songs = [];
@@ -111,8 +168,7 @@ async function displayAlbums() {
 
  // ===== AUTH LOGIC START =====
 
-const loginOverlay = document.querySelector(".login-overlay");
-const signupOverlay = document.querySelector(".signup-overlay");
+
 
 const loginBtn = document.querySelector(".loginbtn");
 const signupBtn = document.querySelector(".signupbtn");
@@ -122,6 +178,9 @@ const closeSignup = document.querySelector(".close-signup");
 
 const loginSubmit = document.querySelector(".login-submit");
 const signupSubmit = document.querySelector(".signup-submit");
+
+
+
 
 // open popups
 if (loginBtn && signupBtn) {
@@ -140,25 +199,39 @@ if (closeLogin && closeSignup) {
 // SIGNUP → BACKEND
 if (signupSubmit) {
 signupSubmit.onclick = async () => {
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
+  const email = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
 
-    if (!email || !password) {
-        alert("Please fill all fields");
-        return;
-    }
+  if (!email || !password) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    const res = await fetch("http://localhost:5000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-    });
+  const res = await fetch("http://localhost:5000/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
 
-    const data = await res.json();
-    alert(data.message);
+  
+ const data = await res.json();
+alert(data.message);
 
+// OTP flow (NEW USER or UNVERIFIED USER)
+// ✅ HANDLE USING STATUS (NOT MESSAGE)
+if (data.status === "new" || data.status === "unverified") {
+  sessionStorage.setItem("pendingEmail", email);
+  signupOverlay.style.display = "none";
+  otpOverlay.style.display = "flex";
+  return;
+}
 
-    if (res.ok) signupOverlay.style.display = "none";
+if (data.status === "verified") {
+  signupOverlay.style.display = "none";
+  loginOverlay.style.display = "flex";
+  return;
+}
+
 };
 }
 
@@ -188,14 +261,16 @@ loginSubmit.onclick = async () => {
 }
 
 // FORGOT PASSWORD FLOW
-document.getElementById("forgotPassword").onclick = async () => {
+const forgotPasswordBtn = document.getElementById("forgotPassword");
+if (forgotPasswordBtn) {
+  forgotPasswordBtn.onclick = async () => {
     const email = prompt("Enter registered email:");
     if (!email) return;
 
     let res = await fetch("http://localhost:5000/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
     });
 
     let data = await res.json();
@@ -207,19 +282,21 @@ document.getElementById("forgotPassword").onclick = async () => {
     const newPassword = prompt("Enter new password:");
 
     if (!otp || !newPassword) {
-        alert("All fields required");
-        return;
+      alert("All fields required");
+      return;
     }
 
     res = await fetch("http://localhost:5000/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp, newPassword })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, newPassword })
     });
 
     data = await res.json();
     alert(data.message);
-};
+  };
+}
+
 
 // ===== AUTH LOGIC END =====
 async function main() {
@@ -336,4 +413,9 @@ if (searchButton && searchText && searchContainer && searchInputField) {
 
 
 
+
+
 main();
+
+});
+
