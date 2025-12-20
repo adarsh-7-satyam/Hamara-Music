@@ -1,123 +1,262 @@
-#  Hamara Music — Spotify Clone (Web Music Player)
+# 🎵 Hamara Music — Web Music Player
 
-A fully functional **Spotify-style music player** built using **HTML, CSS, and JavaScript**.  
-It supports playlist cards, dynamic song loading, real music playback, login & signup popups, search filtering, and responsive UI — all built from scratch.
+Hamara Music is a full-stack web-based music streaming application inspired by modern music platforms like Spotify.
+It allows users to sign up, verify their email using OTP, log in securely, and enjoy music through a clean, responsive UI.
 
----
+This project is built mainly for learning, practice, and portfolio demonstration purposes.
 
-##  Features
-- Dynamic playlist loading from `/songs/<folder>/`
-- Reads metadata from `info.json` for each album
-- Real audio playback (play/pause/next/previous)
-- Seek bar + volume control
-- Login & Signup modal popups
-- Playlist search (real-time filtering)
-- Fully responsive layout
-- Pixel-perfect UI inspired by Spotify
 
----
+------------------------------------------------------------
 
-## Technologies Used
-- **HTML5**
-- **CSS3**
-- **JavaScript (Vanilla JS)**  
-- **Live Server (VS Code extension)**
 
----
+FEATURES
 
-##  Collaborators
-| Name | GitHub | ID |
-|------|--------|----|
-| **Bambam Harsh Choudhary** | https://github.com/harshbambam7294-maker | B24CS504 |
-| **Adarsh Satyam** | https://github.com/adarsh-7-satyam | B24CS002 |
-| **Aditya Kumar Gautam** | https://github.com/aditya-91O2 | B24CS003 |
+Authentication & Security
+- User Sign Up with:
+  - Full Name
+  - Email
+  - Password
+  - Date of Birth
+- Email verification using OTP
+- Secure Login & Logout
+- Password hashing using bcrypt
+- Email verification required before login
+- Personalized greeting after login
+  Example: Welcome <User Name>
 
----
 
-##  Project Repository
-GitHub Repository Link:  
-👉 **https://github.com/harshbambam7294-maker/Hamara-music**
 
----
+Music Player
+- Play / Pause music
+- Next & Previous track controls
+- Seek bar with real-time progress
+- Volume control
+- Song duration display
+- Sidebar song list
+- Album-based playlist system
 
-# 📥 How to Download & Run This Project on Your Laptop
 
-Follow these exact steps:
 
----
+Albums & Playlists
+- Songs are organized in album folders
+- Each album contains:
+  - .mp3 files
+  - cover.jpg
+  - info.json (album metadata)
+- You can:
+  - Add your own songs
+  - Create new albums
+  - Update album details
+- Playlists are loaded dynamically
 
-## 1️⃣ **Clone the Repository**
 
-Open **Terminal / CMD / PowerShell / Git Bash** and run:
 
-```bash
-git clone https://github.com/harshbambam7294-maker/Hamara-music
+
+UI & UX
+- Playlist search functionality
+- Responsive design (mobile + desktop)
+- Hamburger menu for small screens
+- Clean Spotify-like UI
+- Custom branding (Hamara Music)
+
+------------------------------------------------------------
+
+TECHNOLOGIES USED
+
+Frontend
+- HTML5
+- CSS3
+- Vanilla JavaScript
+
+Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- bcrypt (password hashing)
+- Nodemailer (OTP email sending)
+
+------------------------------------------------------------
+
+FOLDER STRUCTURE
+
+```text
+Hamara-music/
+│
+├── backend/
+│   ├── models/
+│   │   └── User.js              # MongoDB user schema
+│   ├── routes/
+│   │   └── auth.js              # Authentication routes
+│   ├── utils/
+│   │   └── sendEmail.js         # OTP email logic
+│   ├── server.js                # Express server entry point
+│   ├── package.json
+│   └── node_modules/
+│
+├── css/
+│   ├── style.css                # Main styling
+│   └── utility.css              # Utility/helper classes
+│
+├── js/
+│   └── script.js                # Frontend logic (player + auth)
+│
+├── img/
+│   ├── logo.svg                 # Hamara Music logo
+│   ├── favicon.ico              # Browser tab icon
+│   └── icons/                   # SVG/PNG icons
+│
+├── songs/
+│   └── ncs/
+│       ├── song1.mp3
+│       ├── song2.mp3
+│       ├── cover.jpg
+│       └── info.json            # Album metadata
+│   └── (you can add more albums here)
+│
+├── index.html                   # Main frontend entry file
+└── README.md
+
 ```
 
----
+------------------------------------------------------------
 
-## 2️⃣ **Move Into the Project Folder**
+HOW TO CLONE AND RUN THE PROJECT (STEP BY STEP)
 
-```bash
-cd Hamara-music
-```
+PREREQUISITES
+- Node.js installed
+- MongoDB (Atlas or local)
+- VS Code
+- Live Server extension in VS Code
 
-> ⚠️ Since the project is stored directly in the **main repository**, you do NOT write `cd main`.  
-> You only write the repo folder name.
+STEP 1: CLONE THE REPOSITORY
 
----
+Open terminal or command prompt and run:
 
-## 3️⃣ **Open the Project in VS Code**
+git clone https://github.com/your-username/hamara-music.git
+cd hamara-music
 
-```bash
-code .
-```
+------------------------------------------------------------
 
-This will open the entire project in Visual Studio Code.
+STEP 2: INSTALL BACKEND DEPENDENCIES
 
----
+cd backend
+npm install
 
-# ▶️ Run the Project Using Live Server
+------------------------------------------------------------
 
-To run the project properly, you must use **Live Server**.
+STEP 3: CREATE ENVIRONMENT VARIABLES
 
----
+Inside the backend folder, create a file named .env
 
-## 4️⃣ **Install Live Server (VS Code Extension)**
+Add the following:
 
-1. Open **VS Code**
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
+
+IMPORTANT:
+- Do NOT upload .env to GitHub
+- Use MongoDB Atlas or local MongoDB
+
+------------------------------------------------------------
+
+STEP 4: RUN THE BACKEND SERVER
+
+Run the following command:
+
+node server.js
+
+If successful, you will see:
+
+Server running on port 5000
+MongoDB connected
+
+Backend runs on:
+http://localhost:5000
+
+------------------------------------------------------------
+
+STEP 5: RUN THE FRONTEND USING LIVE SERVER
+
+1. Open the project folder in VS Code
 2. Go to **Extensions** (left sidebar)
 3. Search **“Live Server”**
 4. Install the extension authored by **Ritwick Dey**
+5. Open index.html
+6. Right-click on index.html
+7. Click "Open with Live Server"
 
----
+Frontend runs on:
+http://127.0.0.1:5500/index.html
 
-## 5️⃣ **Start the Project**
+------------------------------------------------------------
 
-### Step A  
-In VS Code, locate `index.html` inside the project.
+IMPORTANT RUN ORDER
 
-### Step B  
-Right-click on **index.html**
+1. First start backend server (node server.js)
+2. Then open index.html using Live Server
 
-### Step C  
-Click → **Open with Live Server**
+Authentication will NOT work if backend is not running.
 
-The project will automatically open in your browser at:
+------------------------------------------------------------
 
-```
-http://127.0.0.1:5500/
-```
+ADDING YOUR OWN MUSIC OR ALBUMS
 
-Depending on your setup, the exact port may vary (e.g., `5501`, `5502`, etc.).
+To add a new album:
+1. Go to songs/ folder
+2. Create a new folder (example: my-album)
+3. Add:
+   - .mp3 files
+   - cover.jpg
+   - info.json
 
----
+Sample info.json:
 
-# 🎉 You’re Ready!
+{
+  "title": "My Album",
+  "description": "My custom playlist"
+}
 
-You now have a fully running **Spotify-style music player** on your system using Live Server.
+Album will automatically appear on homepage.
 
-Enjoy listening 🎧  
-And feel free to contribute!
+------------------------------------------------------------
 
----
+COPYRIGHT & MUSIC USAGE DISCLAIMER
+
+- This project does NOT promote piracy.
+- All music files currently included in this repository are
+  NON-COPYRIGHT / ROYALTY-FREE (NCS) tracks.
+- These tracks are included only for:
+  - Testing the music player
+  - Demonstration purposes
+  - Avoiding copyright issues on GitHub
+
+USING YOUR OWN MUSIC
+- You are free to add your own .mp3 files inside album folders.
+- You can:
+  - Replace existing songs
+  - Create new albums
+  - Listen to your personal music locally
+
+------------------------------------------------------------
+
+NOTES
+
+- MongoDB free tier has no fixed expiry
+- Backend must be running for authentication features
+- Frontend alone cannot handle login/signup
+
+------------------------------------------------------------
+
+PROJECT PURPOSE
+
+- Full-stack learning
+- Authentication & OTP practice
+- Frontend + backend integration
+- Portfolio showcase
+
+------------------------------------------------------------
+
+Built with ❤️ by Adarsh — Hamara Music
