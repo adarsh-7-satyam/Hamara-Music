@@ -20,3 +20,4 @@ songs/**/*.mp3
 !songs/**/lullaby-baby-sleep-music-388567.mp3
 !songs/**/sleep-inducing-tibetan-bells-388638.mp3
 
+*:Zone.Identifier
