@@ -5,6 +5,9 @@ const sendEmail = require("../utils/sendEmail");
 
 const router = express.Router();
 
+
+
+
 /**
  * =========================
  * SIGNUP (SEND / RESEND OTP)
@@ -13,6 +16,12 @@ const router = express.Router();
 router.post("/signup", async (req, res) => {
   try {
     const { email, password, name } = req.body;
+
+    if (!email || !password || !name) {
+  return res.status(400).json({
+    message: "All fields are required"
+  });
+}
 
     let user = await User.findOne({ email });
 

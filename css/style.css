@@ -720,5 +720,12 @@ body {
   color: black;
 }
 
+.logo img {
+    height: px;        
+    width: auto;
+    max-width: 350px;
+}
+
+
 
 

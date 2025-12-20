@@ -18,7 +18,10 @@
             </div>
 
             <div class="home bg-grey rounded m-1 p-1">
-                <div class="logo"><img width="110" class="invert" src="img/logo.svg" alt=""></div>
+                <div class="logo">
+    <img src="img/logo.svg" alt="Hamara Music">
+</div>
+
                 <ul>
                     <li><img class="invert" src="img/home.svg" alt="">Home</li>
                     <li><img class="invert" src="img/search.svg" alt="">Search</li>
@@ -139,7 +142,32 @@
 
     <input type="email" id="signupEmail" placeholder="Email Address">
 <input type="password" id="signupPassword" placeholder="Password">
-    <input type="date" placeholder="Date of Birth">
+    <div class="dob-container">
+  <select id="signupDay">
+    <option value="">Day</option>
+  </select>
+
+  <select id="signupMonth">
+    <option value="">Month</option>
+    <option value="1">Jan</option>
+    <option value="2">Feb</option>
+    <option value="3">Mar</option>
+    <option value="4">Apr</option>
+    <option value="5">May</option>
+    <option value="6">Jun</option>
+    <option value="7">Jul</option>
+    <option value="8">Aug</option>
+    <option value="9">Sep</option>
+    <option value="10">Oct</option>
+    <option value="11">Nov</option>
+    <option value="12">Dec</option>
+  </select>
+
+  <select id="signupYear">
+    <option value="">Year</option>
+  </select>
+</div>
+
     <select>
         <option value="" disabled selected>Gender</option>
         <option>Male</option>

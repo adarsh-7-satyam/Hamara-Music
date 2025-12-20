@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
@@ -14,7 +18,7 @@ const userSchema = new mongoose.Schema(
     otp: {
       type: String,
     },
-    otpExpires: {
+    otpExpiry: {   // ✅ MATCH auth.js
       type: Date,
     },
     verified: {

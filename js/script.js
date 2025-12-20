@@ -1,4 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  // ===== DOB DROPDOWN SETUP =====
+
+// Day (1–31)
+const daySelect = document.getElementById("signupDay");
+if (daySelect) {
+  for (let d = 1; d <= 31; d++) {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = d;
+    daySelect.appendChild(opt);
+  }
+}
+
+// Year (fast scroll, 1900 → current year)
+const yearSelect = document.getElementById("signupYear");
+if (yearSelect) {
+  const currentYear = new Date().getFullYear();
+  for (let y = currentYear; y >= 1900; y--) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  }
+}
+
     const otpOverlay = document.querySelector(".otp-overlay");
     const loginOverlay = document.querySelector(".login-overlay");
   const signupOverlay = document.querySelector(".signup-overlay");
@@ -146,7 +172,8 @@ function playMusic(track, pause = false) {
     currentSong.src = `${currFolder}/${track}`;
     if (!pause) currentSong.play();
 
-    document.querySelector("#play").src = "img/pause.svg";
+    document.querySelector("#play").src = pause ? "img/play.svg" : "img/pause.svg";
+
     document.querySelector(".songinfo").innerText = decodeURI(track);
     document.querySelector(".songtime").innerText = "00:00 / 00:00";
 }
@@ -229,18 +256,27 @@ if (closeLogin && closeSignup) {
 // SIGNUP → BACKEND
 if (signupSubmit) {
 signupSubmit.onclick = async () => {
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
+const name = document.getElementById("signupName").value;
+const email = document.getElementById("signupEmail").value;
+const password = document.getElementById("signupPassword").value;
 
-  if (!email || !password) {
-    alert("Please fill all fields");
-    return;
-  }
+
+  const day = document.getElementById("signupDay")?.value;
+const month = document.getElementById("signupMonth")?.value;
+const year = document.getElementById("signupYear")?.value;
+
+if (!name || !email || !password || !day || !month || !year) {
+  alert("Please fill all fields including Date of Birth");
+  return;
+}
+
+
 
   const res = await fetch("http://localhost:5000/api/auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ name, email, password })
+
   });
 
   
