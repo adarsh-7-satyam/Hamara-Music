@@ -1,0 +1,22 @@
+# Node / Backend
+node_modules/
+npm-debug.log*
+
+# Environment variables (SECRETS)
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+
+# Ignore all mp3 files
+songs/**/*.mp3
+
+# Allow selected NCS songs (any album)
+!songs/**/forest-lullaby-110624.mp3
+!songs/**/lullaby-baby-sleep-music-388567.mp3
+!songs/**/sleep-inducing-tibetan-bells-388638.mp3
+
