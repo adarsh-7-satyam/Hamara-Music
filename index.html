@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/utility.css">
+    <title>Hamara Music - Web Player</title>
+
+</head>
+
+<body>
+    <div class="container flex bg-black">
+        <div class="left">
+            <div class="close">
+                <img width="30" class="invert" src="img/close.svg" alt="">
+            </div>
+
+            <div class="home bg-grey rounded m-1 p-1">
+                <div class="logo">
+    <img src="img/logo.svg" alt="Hamara Music">
+</div>
+
+                <ul>
+                    <li><img class="invert" src="img/home.svg" alt="">Home</li>
+                    <li><img class="invert" src="img/search.svg" alt="">Search</li>
+
+                    <!-- ✅ ADDED: Search bar input for filtering playlists -->
+<li>
+  <div class="search-container" style="margin-top: 10px; display: flex; align-items: center;">
+    <input type="text" id="playlistSearch" placeholder="Search playlists..." 
+           style="width: 90%; padding: 6px; border-radius: 4px; border: none; outline: none;">
+  </div>
+</li>
+
+                </ul>
+            </div>
+
+            <div class="library bg-grey rounded m-1 p-1">
+                <div class="heading">
+                    <img class="invert" src="img/playlist.svg" alt="">
+                    <h2>Your Library</h2>
+                </div>
+
+                <div class="songList">
+                    <ul></ul>
+                </div>
+
+                <div class="footer">
+                    <div><a href="#"><span>Legal</span></a></div>
+                    <div><a href="#"><span>Privacy Center</span></a></div>
+                    <div><a href="#"><span>Privacy Policy</span></a></div>
+                    <div><a href="#"><span>Cookies</span></a></div>
+                    <div><a href="#"><span>About Ads</span></a></div>
+                    <div><a href="#"><span>Accessibility</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right bg-grey rounded">
+            <div class="header">
+                <div class="nav">
+                    <div class="hamburgerContainer">
+                        <img width="40" class="invert hamburger" src="img/hamburger.svg" alt="">
+                    </div>
+                </div>
+                <div class="buttons">
+    <!-- Welcome text (hidden by default) -->
+    <span id="welcomeText" class="welcome-text" style="display:none;"></span>
+
+    <!-- Logout button (hidden by default) -->
+    <button id="logoutBtn" class="logout-btn" style="display:none;">Log out</button>
+
+    <!-- Existing buttons -->
+    <button class="signupbtn">Sign up</button>
+    <button class="loginbtn">Log in</button>
+</div>
+
+            </div>
+
+            <div class="spotifyPlaylists">
+                <h1>Spotify Playlists</h1>
+                <div class="cardContainer"></div> <!-- leave empty -->
+            </div>
+
+            <div class="playbar">
+                <div class="seekbar">
+                    <div class="circle"></div>
+                </div>
+
+                <div class="abovebar">
+                    <div class="songinfo"></div>
+
+                    <div class="songbuttons">
+                        <img width="35" id="previous" src="img/prevsong.svg" alt="">
+                        <img width="35" id="play" src="img/play.svg" alt="">
+                        <img width="35" id="next" src="img/nextsong.svg" alt="">
+                    </div>
+
+                    <div class="timevol">
+                        <div class="songtime">00:00 / 00:00</div>
+                        <div class="volume">
+                            <img width="25" src="img/volume.svg" alt="">
+                            <div class="range"><input type="range" name="volume"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ✅ ADD LOGIN POPUP HERE -->
+<div class="login-overlay" style="display:none;">
+  <div class="login-box">
+      <h2>Log in to Hamara Music</h2>
+
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+
+      <button type="button" class="login-submit">Log In</button>
+
+
+      <p id="forgotPassword" style="cursor:pointer; color:#1db954;">
+        Forgot password?
+      </p>
+
+      <p class="close-login" style="cursor:pointer; margin-top:10px;">Cancel</p>
+  </div>
+</div>
+
+<!-- ✅ END LOGIN POPUP -->
+
+
+<!-- ✅ SIGNUP POPUP -->
+<div class="signup-overlay" style="display:none;">
+  <div class="signup-box">
+<h2>Sign up for Hamara Music</h2>
+
+    <input type="text" id="signupName" placeholder="Full Name">
+
+    <input type="email" id="signupEmail" placeholder="Email Address">
+<input type="password" id="signupPassword" placeholder="Password">
+    <div class="dob-container">
+  <select id="signupDay">
+    <option value="">Day</option>
+  </select>
+
+  <select id="signupMonth">
+    <option value="">Month</option>
+    <option value="1">Jan</option>
+    <option value="2">Feb</option>
+    <option value="3">Mar</option>
+    <option value="4">Apr</option>
+    <option value="5">May</option>
+    <option value="6">Jun</option>
+    <option value="7">Jul</option>
+    <option value="8">Aug</option>
+    <option value="9">Sep</option>
+    <option value="10">Oct</option>
+    <option value="11">Nov</option>
+    <option value="12">Dec</option>
+  </select>
+
+  <select id="signupYear">
+    <option value="">Year</option>
+  </select>
+</div>
+
+    <select>
+        <option value="" disabled selected>Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+    </select>
+    <button type="button" class="signup-submit">Sign Up</button>
+    <p class="close-signup" style="cursor:pointer; margin-top:10px;">Cancel</p>
+  </div>
+</div>
+<!-- ✅ END SIGNUP POPUP -->
+
+<div class="otp-overlay" style="display:none;">
+  <div class="otp-box">
+    <h2>Verify Email</h2>
+
+    <input
+      type="text"
+      id="otpInput"
+      placeholder="Enter OTP"
+      autocomplete="one-time-code"
+    />
+
+    <button id="verifyOtpBtn">Verify OTP</button>
+  </div>
+</div>
+
+
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
