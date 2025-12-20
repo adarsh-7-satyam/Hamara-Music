@@ -3,7 +3,7 @@
 Hamara Music is a full-stack web-based music streaming application inspired by modern music platforms like Spotify.
 It allows users to sign up, verify their email using OTP, log in securely, and enjoy music through a clean, responsive UI.
 
-This project is built mainly for learning, practice, and portfolio demonstration purposes. This is extension of a group college project.
+This project is built mainly for learning, practice, and portfolio demonstration purposes. This project is extension of a group college project created by me and my friends.
 
 
 ------------------------------------------------------------
@@ -272,4 +272,5 @@ PROJECT PURPOSE
 ------------------------------------------------------------
 
 Built with ❤️ by Adarsh — Hamara Music
+
 
