@@ -61,7 +61,7 @@ verifyOtpBtn.onclick = async () => {
     return;
   }
 
-  const res = await fetch("https://hamara-music-production.up.railway.app/api/auth/verify-otp", {
+  const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp })
@@ -272,7 +272,7 @@ if (!name || !email || !password || !day || !month || !year) {
 
 
 
-  const res = await fetch("https://hamara-music-production.up.railway.app/api/auth/signup", {
+  const res = await fetch("http://localhost:5000/api/auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, password })
@@ -313,7 +313,7 @@ loginSubmit.onclick = async () => {
         return;
     }
 
-    const res = await fetch("https://hamara-music-production.up.railway.app/api/auth/login", {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -339,7 +339,7 @@ if (forgotPasswordBtn) {
     const email = prompt("Enter registered email:");
     if (!email) return;
 
-    let res = await fetch("https://hamara-music-production.up.railway.app/api/auth/forgot-password", {
+    let res = await fetch("http://localhost:5000/api/auth/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
@@ -358,7 +358,7 @@ if (forgotPasswordBtn) {
       return;
     }
 
-    res = await fetch("https://hamara-music-production.up.railway.app/api/auth/reset-password", {
+    res = await fetch("http://localhost:5000/api/auth/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp, newPassword })
@@ -508,5 +508,4 @@ updateTopBar();
 
 
 });
-
 
