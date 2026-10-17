@@ -1,0 +1,511 @@
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ===== DOB DROPDOWN SETUP =====
+
+// Day (1–31)
+const daySelect = document.getElementById("signupDay");
+if (daySelect) {
+  for (let d = 1; d <= 31; d++) {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = d;
+    daySelect.appendChild(opt);
+  }
+}
+
+// Year (fast scroll, 1900 → current year)
+const yearSelect = document.getElementById("signupYear");
+if (yearSelect) {
+  const currentYear = new Date().getFullYear();
+  for (let y = currentYear; y >= 1900; y--) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  }
+}
+
+    const otpOverlay = document.querySelector(".otp-overlay");
+    const loginOverlay = document.querySelector(".login-overlay");
+  const signupOverlay = document.querySelector(".signup-overlay");
+
+   const pendingEmail = sessionStorage.getItem("pendingEmail");
+if (pendingEmail && otpOverlay) {
+  otpOverlay.style.display = "flex";
+} else if (otpOverlay) {
+  otpOverlay.style.display = "none";
+}
+
+
+
+
+    
+
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+
+if (verifyOtpBtn) {
+
+    
+
+verifyOtpBtn.onclick = async () => {
+  const otp = document.getElementById("otpInput").value;
+  const email = sessionStorage.getItem("pendingEmail");
+
+  if (!otp) {
+  alert("Enter OTP");
+  return;
+}
+
+  if (!email) {
+    alert("Signup session expired. Please signup again.");
+    return;
+  }
+
+  const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+
+  if (res.ok) {
+  sessionStorage.removeItem("pendingEmail");
+  otpOverlay.style.display = "none";
+  alert("Email verified! Please log in.");
+  loginOverlay.style.display = "flex";
+}
+
+};
+}
+
+
+console.log('Lets write JavaScript');
+function updateTopBar() {
+  const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+  const name = sessionStorage.getItem("userName");
+
+  const welcomeText = document.getElementById("welcomeText");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const loginBtn = document.querySelector(".loginbtn");
+  const signupBtn = document.querySelector(".signupbtn");
+
+  if (isLoggedIn && name) {
+    welcomeText.innerText = `Welcome ${name}`;
+    welcomeText.style.display = "inline";
+
+    logoutBtn.style.display = "inline-block";
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+  } else {
+    welcomeText.style.display = "none";
+    logoutBtn.style.display = "none";
+
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+  }
+}
+
+
+
+let currentSong = new Audio();
+let songs = [];
+let currFolder = "";
+
+// Convert seconds to mm:ss
+function secondsToMinutesSeconds(seconds) {
+    if (isNaN(seconds) || seconds < 0) return "00:00";
+
+    let m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    let s = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+}
+
+// Load songs inside the selected folder
+async function getSongs(folder) {
+    currFolder = folder;
+    let req = await fetch(`${folder}/`);
+    let text = await req.text();
+
+    let div = document.createElement("div");
+    div.innerHTML = text;
+
+    let anchors = div.getElementsByTagName("a");
+    songs = [];
+
+    for (let a of anchors) {
+        if (a.href.endsWith(".mp3")) {
+            songs.push(a.href.split(`${folder}/`)[1]);
+        }
+    }
+
+    // Display song list in sidebar
+    let songUL = document.querySelector(".songList ul");
+    songUL.innerHTML = "";
+
+    for (let song of songs) {
+        songUL.innerHTML += `
+        <li>
+            <img class="invert" width="34" src="img/music.svg" alt="">
+            <div class="info">
+                <div>${song.replaceAll("%20", " ")}</div>
+                <div>Unknown Artist</div>
+            </div>
+            <div class="playnow">
+                <span>Play Now</span>
+                <img class="invert" src="img/play.svg" alt="">
+            </div>
+        </li>`;
+    }
+
+    // Add event listeners to play a song when clicked
+    document.querySelectorAll(".songList li").forEach(li => {
+        li.onclick = () => playMusic(li.querySelector(".info div").innerText.trim());
+    });
+
+    return songs;
+}
+
+// Play a song
+function playMusic(track, pause = false) {
+    currentSong.src = `${currFolder}/${track}`;
+    if (!pause) currentSong.play();
+
+    document.querySelector("#play").src = pause ? "img/play.svg" : "img/pause.svg";
+
+    document.querySelector(".songinfo").innerText = decodeURI(track);
+    document.querySelector(".songtime").innerText = "00:00 / 00:00";
+}
+
+// Display Album Cards
+async function displayAlbums() {
+    let req = await fetch(`songs/`);
+    let text = await req.text();
+
+    let div = document.createElement("div");
+    div.innerHTML = text;
+
+    let anchors = div.getElementsByTagName("a");
+    let cardContainer = document.querySelector(".cardContainer");
+
+    for (let a of anchors) {
+        if (a.href.includes("/songs/") && !a.href.endsWith(".htaccess")) {
+            let folder = a.href.split("/").slice(-1)[0]; // FIXED
+
+            let metaReq = await fetch(`songs/${folder}/info.json`);
+            let meta = await metaReq.json();
+
+            cardContainer.innerHTML += `
+            <div data-folder="${folder}" class="card">
+                <div class="play">
+                    <svg width="24" height="24" fill="#fff">
+                        <path d="M5 20V4L19 12L5 20Z"/>
+                    </svg>
+                </div>
+                <img src="songs/${folder}/cover.jpg" alt="">
+                <h2>${meta.title}</h2>
+                <p>${meta.description}</p>
+            </div>`;
+        }
+    }
+
+    // Click to load playlist
+    document.querySelectorAll(".card").forEach(card => {
+        card.onclick = async () => {
+            let folder = card.dataset.folder;
+            await getSongs(`songs/${folder}`);
+            playMusic(songs[0]);
+        };
+    });
+}
+
+
+
+
+ // ===== AUTH LOGIC START =====
+
+
+
+const loginBtn = document.querySelector(".loginbtn");
+const signupBtn = document.querySelector(".signupbtn");
+
+const closeLogin = document.querySelector(".close-login");
+const closeSignup = document.querySelector(".close-signup");
+
+const loginSubmit = document.querySelector(".login-submit");
+const signupSubmit = document.querySelector(".signup-submit");
+
+
+
+
+// open popups
+if (loginBtn && signupBtn) {
+    loginBtn.onclick = () => loginOverlay.style.display = "flex";
+    signupBtn.onclick = () => signupOverlay.style.display = "flex";
+}
+
+
+// close popups
+if (closeLogin && closeSignup) {
+    closeLogin.onclick = () => loginOverlay.style.display = "none";
+    closeSignup.onclick = () => signupOverlay.style.display = "none";
+}
+;
+
+// SIGNUP → BACKEND
+if (signupSubmit) {
+signupSubmit.onclick = async () => {
+const name = document.getElementById("signupName").value;
+const email = document.getElementById("signupEmail").value;
+const password = document.getElementById("signupPassword").value;
+
+
+  const day = document.getElementById("signupDay")?.value;
+const month = document.getElementById("signupMonth")?.value;
+const year = document.getElementById("signupYear")?.value;
+
+if (!name || !email || !password || !day || !month || !year) {
+  alert("Please fill all fields including Date of Birth");
+  return;
+}
+
+
+
+  const res = await fetch("http://localhost:5000/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password })
+
+  });
+
+  
+ const data = await res.json();
+alert(data.message);
+
+// OTP flow (NEW USER or UNVERIFIED USER)
+// ✅ HANDLE USING STATUS (NOT MESSAGE)
+if (data.status === "new" || data.status === "unverified") {
+  sessionStorage.setItem("pendingEmail", email);
+  signupOverlay.style.display = "none";
+  otpOverlay.style.display = "flex";
+  return;
+}
+
+if (data.status === "verified") {
+  signupOverlay.style.display = "none";
+  loginOverlay.style.display = "flex";
+  return;
+}
+
+};
+}
+
+// LOGIN → BACKEND
+if (loginSubmit) {
+
+loginSubmit.onclick = async () => {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (res.ok) {
+  sessionStorage.setItem("isLoggedIn", "true");
+  sessionStorage.setItem("userName", data.name);
+
+  loginOverlay.style.display = "none";
+  updateTopBar();
+}
+};
+}
+
+// FORGOT PASSWORD FLOW
+const forgotPasswordBtn = document.getElementById("forgotPassword");
+if (forgotPasswordBtn) {
+  forgotPasswordBtn.onclick = async () => {
+    const email = prompt("Enter registered email:");
+    if (!email) return;
+
+    let res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+
+    let data = await res.json();
+    alert(data.message);
+
+    if (!res.ok) return;
+
+    const otp = prompt("Enter OTP sent to email:");
+    const newPassword = prompt("Enter new password:");
+
+    if (!otp || !newPassword) {
+      alert("All fields required");
+      return;
+    }
+
+    res = await fetch("http://localhost:5000/api/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, newPassword })
+    });
+
+    data = await res.json();
+    alert(data.message);
+  };
+}
+
+
+// ===== AUTH LOGIC END =====
+async function main() {
+    await getSongs("songs/ncs");
+    playMusic(songs[0], true);
+    await displayAlbums();
+
+    // Play / Pause button
+    document.querySelector("#play").onclick = () => {
+    if (currentSong.paused) {
+        currentSong.play();
+        document.querySelector("#play").src = "img/pause.svg";
+    } else {
+        currentSong.pause();
+        document.querySelector("#play").src = "img/play.svg";
+    }
+};
+
+
+    // Update progress / time
+    currentSong.ontimeupdate = () => {
+        let progress = (currentSong.currentTime / currentSong.duration) * 100;
+        document.querySelector(".circle").style.left = `${progress}%`;
+        document.querySelector(".songtime").innerText =
+            `${secondsToMinutesSeconds(currentSong.currentTime)} / ${secondsToMinutesSeconds(currentSong.duration)}`;
+    };
+
+    // Seek bar
+    document.querySelector(".seekbar").onclick = (e) => {
+        let width = e.target.getBoundingClientRect().width;
+        let percent = (e.offsetX / width) * 100;
+        currentSong.currentTime = (currentSong.duration * percent) / 100;
+    };
+
+    // Volume control
+    document.querySelector(".range input").oninput = (e) => {
+        currentSong.volume = e.target.value / 100;
+    };
+
+    // Next / Previous song
+    document.querySelector("#previous").onclick = () => {
+        let index = songs.indexOf(currentSong.src.split("/").pop());
+        if (index > 0) playMusic(songs[index - 1]);
+    };
+
+    document.querySelector("#next").onclick = () => {
+        let index = songs.indexOf(currentSong.src.split("/").pop());
+        if (index < songs.length - 1) playMusic(songs[index + 1]);
+    };
+
+    // Mobile sidebar toggle
+    document.querySelector(".hamburger").onclick = () => {
+        document.querySelector(".left").style.left = "0";
+    };
+
+    document.querySelector(".close").onclick = () => {
+        document.querySelector(".left").style.left = "-120%";
+    };
+
+  
+
+
+// ✅ SEARCH FUNCTIONALITY FOR PLAYLISTS
+const searchInput = document.getElementById("playlistSearch");
+if (searchInput) {
+    searchInput.addEventListener("input", () => {
+        const filter = searchInput.value.toLowerCase();
+        const cards = document.querySelectorAll(".card");
+
+        cards.forEach(card => {
+            const title = card.querySelector("h2")?.innerText.toLowerCase() || "";
+            const desc = card.querySelector("p")?.innerText.toLowerCase() || "";
+            card.style.display = (title.includes(filter) || desc.includes(filter)) ? "block" : "none";
+        });
+    });
+}
+
+// ✅ MAKE SEARCH ICON AND TEXT TOGGLE THE SEARCH BAR VISIBILITY
+const searchButton = document.querySelector('li img[src="img/search.svg"]');
+const searchText = document.querySelector('li img[src="img/search.svg"]').parentElement; // The <li> that contains "Search"
+const searchContainer = document.querySelector(".search-container");
+const searchInputField = document.getElementById("playlistSearch");
+
+// Function to show the search bar
+function showSearchBar() {
+    if (!searchContainer.classList.contains("active")) {
+        searchContainer.classList.add("active");
+        searchInputField.focus();
+
+        // Optional: Scroll to playlists section for better UX
+        const playlistSection = document.querySelector(".spotifyPlaylists");
+        if (playlistSection) {
+            playlistSection.scrollIntoView({ behavior: "smooth" });
+        }
+    } else {
+        // If already visible, just refocus the input (don’t hide it)
+        searchInputField.focus();
+    }
+}
+
+if (searchButton && searchText && searchContainer && searchInputField) {
+    // Clicking search icon shows search bar
+    searchButton.addEventListener("click", showSearchBar);
+
+    // Clicking "Search" text also shows search bar
+    searchText.addEventListener("click", showSearchBar);
+
+    // ✅ Optional: hide search bar when user clicks outside or unfocuses
+    searchInputField.addEventListener("blur", () => {
+        setTimeout(() => searchContainer.classList.remove("active"), 200);
+    });
+}
+}
+
+
+
+
+
+
+
+main();
+
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.onclick = () => {
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("userName");
+    updateTopBar();
+    alert("Logged out successfully");
+  };
+}
+
+
+
+updateTopBar();
+
+
+
+});
+
